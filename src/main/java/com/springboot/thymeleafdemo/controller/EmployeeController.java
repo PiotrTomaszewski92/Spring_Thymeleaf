@@ -1,5 +1,7 @@
 package com.springboot.thymeleafdemo.controller;
 import com.springboot.thymeleafdemo.entity.Employee;
+import com.springboot.thymeleafdemo.service.EmployeeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,18 +14,16 @@ import java.util.List;
 @Controller
 @RequestMapping("/employees")
 public class EmployeeController {
-    private List<Employee> employees;
+    private EmployeeService employeeService;
 
-    @PostConstruct
-    private void loadData(){
-        employees = new ArrayList<>();
-        employees.add(new Employee(1, "Piotr", "Tomaszewski", "piotr@tomaszew.com"));
-        employees.add(new Employee(2, "Adam", "Tomaszewski", "adamtomkrk@gmail.com"));
-        employees.add(new Employee(3,"Daniel", "Kłusek", "firgasto@gmail.com"));
+    @Autowired
+    public EmployeeController(EmployeeService employeeService) {
+        this.employeeService = employeeService;
     }
 
     @GetMapping("/list")
     public String listEmployees(Model model){
+        List<Employee> employees = employeeService.findAll();
         model.addAttribute("employees",employees);
         return "list-employees";
     }
